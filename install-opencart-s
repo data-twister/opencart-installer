@@ -13,6 +13,17 @@ DOMAIN_HELP='-m domain url ex. www.opencart.com'
 PROJECT_HELP='-n project name ex. mystore'
 VERBOSE_HELP='-l true = verbose'
 REMOVE_DB_HELP='-o true = remove database if exists'
+SQL_DRIVER_HELP='-q mysqli = use mqsqli driver  if exists'
+REMOVE_ON_ERROR="false"
+OPENCART_PATH="$HOME/Projects/opencart"
+TEMP_DIR="$HOME/Projects/opencart/tmp"
+EXTENSION_DIR="$HOME/Projects/opencart/extension"
+THEME_DIR="$HOME/Projects/opencart/theme"
+TRUNCATE_FILE="$HOME/Projects/opencart/truncate_opencart.sql"
+STABLE_VERSION="1.5.6.1"
+STABLE="https://github.com/opencart/opencart.git"
+UPSTREAM="https://github.com/opencart/opencart.git"
+ORIGIN="git@github.com:mithereal/opencart.git"
 
 function help()
 {
@@ -27,11 +38,13 @@ function help()
             echo $TRUNCATE_HELP 
             echo $DESTINATION_HELP 
             echo $DOMAIN_HELP 
+            echo $SQL_DRIVER_HELP
             echo $TEMPLATE_HELP 
             echo $EXTENSION_HELP 
             echo $VERBOSE_HELP
             echo $REMOVE_DB_HELP 
 }
+
 
 while getopts ":p:u:d:t:v:m:n:c:h:e:l:o:?" opt; do
     case $opt in
@@ -49,8 +62,6 @@ while getopts ":p:u:d:t:v:m:n:c:h:e:l:o:?" opt; do
             ;;
         t)
             TEMPLATE=$OPTARG
-            
-            # echo "-t was triggered, Parameter: $TEMPLATE" >&2
             ;;
         v)
             VERSION=$OPTARG
@@ -58,6 +69,10 @@ while getopts ":p:u:d:t:v:m:n:c:h:e:l:o:?" opt; do
            
         h)
              HOST=$OPTARG
+
+            ;;
+        q)
+             DBDRIVER=$OPTARG
 
             ;;
 
@@ -69,7 +84,6 @@ while getopts ":p:u:d:t:v:m:n:c:h:e:l:o:?" opt; do
             ;;
         n)
             PROJECT_NAME=$OPTARG
-            echo "Project Name given: $PROJECT_NAME" >&2
             ;;
         l)
             VERBOSE=true
@@ -105,8 +119,17 @@ extensionArray=($EXTENSION);
 echo ""
 echo "Preparing to install Opencart..."
 echo ""
-read -p "Enter the hostname of the database: " MYSQL_HOST
+if [ -z "$HOST" ]
+then
+      read -p "Enter the hostname of the database: " MYSQL_HOST
+fi
+if [ -z "$DBDRIVER" ]
+then
+      read -p "Enter the  database driver: " DBDRIVER
+fi
+
 read -p "Enter the username for the database: " MYSQL_USERNAME
+
 printf "Enter the password for the database: "
 read -s  MYSQL_PASS
 
@@ -146,7 +169,7 @@ fi
 # -h <hostname> (http://example.com/<domain> if none given)
 if [ -z "$HOST" ]
 then
-  HOST="example.com"
+  HOST=""
 echo "no hostname given, setting default: $HOST" >&2
 else
     echo "host: $HOST" >&2
@@ -204,7 +227,7 @@ then
 OPENCART_PATH=$TEMP_DIR/opencart/upload
 fi 
 
-elif [ $VERSION == upstream ]
+elif [ $VERSION == 'upstream' ]
 then
 # purge tmp folder
 rm -drf $TEMP_DIR/opencart
@@ -219,7 +242,7 @@ then
 OPENCART_PATH=$TEMP_DIR/opencart/upload
 fi
 
-elif [ $VERSION == origin ]
+elif [ $VERSION == 'origin' ]
 then
 # purge tmp folder
 rm -drf $TEMP_DIR/opencart
@@ -244,6 +267,7 @@ rm -drf $TEMP_DIR/opencart
 
 # clone opencart
 cd $TEMP_DIR
+
 git clone -b v$VERSION $STABLE
 
 # check if opencart is in folder
@@ -258,9 +282,9 @@ echo "Installing opencart $VERSION..."
 cp -r $OPENCART_PATH/* $DESTINATION_PATH
 cp $OPENCART_PATH/.htaccess.txt $DESTINATION_PATH/.htaccess
 
-# rename config files 
-mv $DESTINATION_PATH/config-dist.php $DESTINATION_PATH/config.php
-mv $DESTINATION_PATH/admin/config-dist.php $DESTINATION_PATH/admin/config.php
+# generate config files 
+cp $DESTINATION_PATH/config-dist.php $DESTINATION_PATH/config.php
+cp $DESTINATION_PATH/admin/config-dist.php $DESTINATION_PATH/admin/config.php
 
 # change permissions
 if [[ "$OS" == 'Linux' ]]; then
@@ -279,7 +303,7 @@ if [[ -z "$VERBOSE" ]]; then
     chmod 0777 $DESTINATION_PATH/image/ > /dev/null 2>&1
     chmod 0777 $DESTINATION_PATH/image/cache/ > /dev/null 2>&1
     chmod 0777 $DESTINATION_PATH/image/data/ > /dev/null 2>&1
-    chmod 0777 $DESTINATION_PATH/system/download/ > /dev/null 2>&1
+    chmod 0777 $DESTINATION_PATH/download/ > /dev/null 2>&1
 else
     # change permissions
     chown -R $FOR_USER:$FOR_USER $DESTINATION_PATH 
@@ -323,18 +347,23 @@ fi
 
 # create database
 if [[ "$MYSQL_PASS" == '' ]]; then
-    echo "create database $DATABASE" | mysql -u $MYSQL_USERNAME
+    echo "create database IF NOT EXISTS $DATABASE" | mysql -u $MYSQL_USERNAME
 else
-    echo "create database $DATABASE" | mysql -u $MYSQL_USERNAME -p$MYSQL_PASS
+    echo "create database IF NOT EXISTS $DATABASE" | mysql -u $MYSQL_USERNAME -p$MYSQL_PASS
 fi
 
 
 if [ $? -eq 0 ]; then
     echo "Database $DATABASE Created Successfully."
     if [[ "$MYSQL_PASS" == '' ]]; then
-    php $DESTINATION_PATH/install/cli_install.php install --db $MYSQL_HOST --user $MYSQL_USERNAME  --db_user $MYSQL_USERNAME --db_password "" --dbname $DATABASE --db_prefix oc_ --username admin --password admin123 --email admin@example.com --agree_tnc yes --http_server $DOMAIN --domain $PROJECT_NAME
+
+ php $DESTINATION_PATH/install/cli_install.php install --db_driver $DBDRIVER --db_host $MYSQL_HOST  --db_user $MYSQL_USERNAME --db_password "" --db_name $DATABASE --db_prefix oc_ --username admin --password admin --email admin@example.com --agree_tnc yes --http_server $DOMAIN --domain $PROJECT_NAME 
+
 else
-    php $DESTINATION_PATH/install/cli_install.php install --db $MYSQL_HOST --user $MYSQL_USERNAME  --db_user $MYSQL_USERNAME --db_password $MYSQL_PASS --dbname $DATABASE --db_prefix oc_ --username admin --password admin123 --email admin@example.com --agree_tnc yes --http_server $DOMAIN --domain $PROJECT_NAME
+
+ php $DESTINATION_PATH/install/cli_install.php install --db_driver $DBDRIVER --db_host $MYSQL_HOST  --db_user $MYSQL_USERNAME --db_password $MYSQL_PASS --db_name $DATABASE --db_prefix oc_ --username admin --password admin --email admin@example.com --agree_tnc yes --http_server $DOMAIN --domain $PROJECT_NAME 
+
+
 fi
 
 if $TRUNCATE; then
@@ -411,7 +440,7 @@ if [[ -z "$VERBOSE" ]]; then
 git init > /dev/null 2>&1
 git add . > /dev/null 2>&1
 git commit -m "initial commit" > /dev/null 2>&1
-echo "$PROJECT_NAME has beem placed under revision control"
+echo "$PROJECT_NAME has been placed under revision control"
 else
 git init
 git add .
