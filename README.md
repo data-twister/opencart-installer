@@ -11,11 +11,22 @@ Summary
 Can be used under linux, or windows with cygwin
 
 Can also pre-install templates if specified
+can also install on amazon aws, amazon linux
 can also be run as a standalone w/ installing opencart-installer-s
 
 Ubuntu Install
 ----------
 ./install
+
+Amazon Linux Install
+----------
+when you are making an instance
+
+on step #3 the configure instance details, click advanced details
+
+for the user data select as file and browse to aws-start.sh
+
+review and launch
 
 Windows Install
 ----------
