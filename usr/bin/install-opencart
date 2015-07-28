@@ -6,6 +6,9 @@ DESTINATION_HELP='-p project destination path'
 EXTENSION_HELP='-e extension name ex. pdf_catalog <seperate with commas>'
 FOR_USER_HELP='-u user name'
 DATABASE_HELP='-d database name'
+MYSQL_USERNAME_HELP='-N database user name'
+MYSQL_USERNAME_HELP='-P database password'
+DATABASE_HELP='-d database name'
 TEMPLATE_HELP='-t template name ex. Journal <seperate with commas>'
 VERSION_HELP='-v version ex stable (required)'
 HOST_HELP='-h database host'
@@ -27,6 +30,8 @@ function help()
             echo $HOST_HELP
             echo $FOR_USER_HELP
             echo $DATABASE_HELP 
+            echo $TRUNCATE_HELP 
+            echo $MYSQL_USERNAME_HELP 
             echo $TRUNCATE_HELP 
             echo $DESTINATION_HELP 
             echo $DOMAIN_HELP 
@@ -85,6 +90,13 @@ while getopts ":p:u:d:t:v:m:n:c:h:e:l:o:?" opt; do
             TRUNCATE=true
             echo "the demo products will be removed"
             ;;
+         P)
+            MYSQL_PASS=$OPTARG
+            ;;
+
+         N)
+            MYSQL_USERNAME=$OPTARG
+            ;;
        
         :)
             echo "Option -$OPTARG requires an argument." >&2
@@ -120,11 +132,16 @@ then
       read -p "Enter the  database driver: " DBDRIVER
 fi
 
+if [ -z "$MYSQL_USERNAME" ]
+then
 read -p "Enter the username for the database: " MYSQL_USERNAME
+fi
 
+if [ -z "$MYSQL_PASS" ]
+then
 printf "Enter the password for the database: "
 read -s  MYSQL_PASS
-
+fi
 
 if [ ! -d "$TEMP_DIR" ]; then
 mkdir $TEMP_DIR;
