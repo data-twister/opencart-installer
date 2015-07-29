@@ -23,4 +23,4 @@ git clone https://github.com/mithereal/opencart-installer.git
 sudo opencart-installer/install
 cd /var/www/http
 HOSTNAME= $(curl http://169.254.169.254/latest/public-hostname)
-opencart-install -n opencart -u opencart-user -d opencart -m $HOSTNAME -h $HOSTNAME  -v stable
+opencart-install -n opencart -u opencart-user -d opencart -m $HOSTNAME -h $HOSTNAME  -v stable -N opencart-user -P $PASSWORD
