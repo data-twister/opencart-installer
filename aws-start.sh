@@ -13,14 +13,14 @@ service httpd start
 service mysqld start
 chkconfig httpd on
 chkconfig mysqld on
-mysql -uroot -e "CREATE USER 'opencart-user'@'localhost' IDENTIFIED BY '$PASSWORD'"
-mysql -uroot -e "CREATE database 'opencart'"
-mysql -uroot -e "GRANT ALL PRIVILEGES ON `opencart`.* TO 'opencart-user'@'localhost'"
+mysql -uroot -e "CREATE USER 'opencart-user' IDENTIFIED BY '$PASSWORD'"
+mysql -uroot -e "CREATE DATABASE opencart"
+mysql -uroot -e "GRANT ALL PRIVILEGES ON opencart.* TO 'opencart-user'"
 mysql -uroot -e "FLUSH PRIVILEGES"
 mkdir Projects
 cd Projects
 git clone https://github.com/mithereal/opencart-installer.git
-sudo opencart-installer/install
+sudo opencart-installer/install_aws
 cd /var/www/http
 HOSTNAME= $(curl http://169.254.169.254/latest/public-hostname)
 opencart-install -n opencart -u ec2-user -d opencart -m $HOSTNAME -h $HOSTNAME  -v stable -N opencart-user -P $PASSWORD

@@ -5,10 +5,10 @@ sudo cp -r etc/* /etc
 
 cp -r home/user/* ~/.
 
-@sudo chmod +x /usr/local/bin/install-opencart
-@sudo chmod +x /usr/local/bin/install-opencart-plugin
-@sudo chmod +x /usr/bin/install-opencart
-@sudo chmod +x /usr/bin/install-opencart-plugin
+sudo chmod +x /usr/local/bin/install-opencart
+sudo chmod +x /usr/local/bin/install-opencart-plugin
+sudo chmod +x /usr/bin/install-opencart
+sudo chmod +x /usr/bin/install-opencart-plugin
 
 echo "Install Complete"
 exit 0
