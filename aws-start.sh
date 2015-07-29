@@ -20,7 +20,7 @@ mysql -uroot -e "FLUSH PRIVILEGES"
 mkdir Projects
 cd Projects
 git clone https://github.com/mithereal/opencart-installer.git
-sudo opencart-installer/install_aws
+opencart-installer/install_aws
 cd /var/www/http
 HOSTNAME= $(curl http://169.254.169.254/latest/public-hostname)
 opencart-install -n opencart -u ec2-user -d opencart -m $HOSTNAME -h $HOSTNAME  -v stable -N opencart-user -P $PASSWORD
