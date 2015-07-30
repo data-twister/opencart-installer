@@ -228,7 +228,7 @@ rm -drf $TEMP_DIR/opencart
 
 # clone opencart
 cd $TEMP_DIR
-git clone -b v$STABLE_VERSION $STABLE
+git clone  $STABLE
 
 # check if opencart is in folder
 if [ -f opencart/upload/index.php ];
@@ -277,7 +277,7 @@ rm -drf $TEMP_DIR/opencart
 # clone opencart
 cd $TEMP_DIR
 
-git clone -b v$VERSION $STABLE
+git clone $STABLE
 
 # check if opencart is in folder
 if [ -f opencart/upload/index.php ];

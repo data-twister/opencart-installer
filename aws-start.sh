@@ -24,5 +24,5 @@ chmod +x opencart-installer/install_aws
 cd opencart-installer
 ./install_aws
 cd /var/www/html
-HOSTNAME= $(curl http://169.254.169.254/latest/public-hostname)
-opencart-install -n opencart -u ec2-user -d opencart -m $HOSTNAME -h $HOSTNAME  -v stable -N opencart-user -P $PASSWORD
+HOSTNAME=$(curl http://169.254.169.254/latest/meta-data/hostname)
+install-opencart -n opencart -u ec2-user -d opencart -m $HOSTNAME -h $HOSTNAME  -v stable -N opencart-user -P $PASSWORD
