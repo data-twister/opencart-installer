@@ -6,8 +6,9 @@ DESTINATION_HELP='-p project destination path'
 EXTENSION_HELP='-e extension name ex. pdf_catalog <seperate with commas>'
 FOR_USER_HELP='-u user name'
 DATABASE_HELP='-d database name'
+DATABASE_DRIVER_HELP='-D database driver (mysqli)'
 MYSQL_USERNAME_HELP='-N database user name'
-MYSQL_USERNAME_HELP='-P database password'
+MYSQL_PASSWORD_HELP='-P database password'
 DATABASE_HELP='-d database name'
 TEMPLATE_HELP='-t template name ex. Journal <seperate with commas>'
 VERSION_HELP='-v version ex stable (required)'
@@ -29,13 +30,13 @@ function help()
             echo $PROJECT_HELP 
             echo $HOST_HELP
             echo $FOR_USER_HELP
+            echo $DATABASE_DRIVER_HELP 
             echo $DATABASE_HELP 
-            echo $TRUNCATE_HELP 
             echo $MYSQL_USERNAME_HELP 
+            echo $MYSQL_PASSWORD_HELP 
             echo $TRUNCATE_HELP 
             echo $DESTINATION_HELP 
             echo $DOMAIN_HELP 
-            echo $SQL_DRIVER_HELP
             echo $TEMPLATE_HELP 
             echo $EXTENSION_HELP 
             echo $VERBOSE_HELP
@@ -43,7 +44,7 @@ function help()
 }
 
 
-while getopts ":p:u:d:t:v:m:n:c:h:e:l:o:?" opt; do
+while getopts ":p:u:d:t:v:m:n:c:h:e:l:o:D:P:N:?" opt; do
     case $opt in
         p)
             DESTINATION_PATH=$OPTARG
@@ -68,7 +69,7 @@ while getopts ":p:u:d:t:v:m:n:c:h:e:l:o:?" opt; do
              HOST=$OPTARG
 
             ;;
-        q)
+        D)
              DBDRIVER=$OPTARG
 
             ;;
@@ -120,6 +121,11 @@ CWD=$(pwd)
 templateArray=($TEMPLATE);
 extensionArray=($EXTENSION);
 
+if [ -d $TEMP_DIR ];
+then
+$TEMP_DIR = CWD
+fi 
+
 echo ""
 echo "Preparing to install Opencart..."
 echo ""
@@ -144,7 +150,7 @@ read -s  MYSQL_PASS
 fi
 
 if [ ! -d "$TEMP_DIR" ]; then
-mkdir $TEMP_DIR;
+mkdir -p $TEMP_DIR;
 fi
 
 echo "using version: $VERSION" >&2
@@ -213,9 +219,9 @@ else
     echo "database: $DATABASE" >&2
 fi
 
-# create path folder if not exists (this won't work if parent folder missing)
+# create path folder if not exists 
 if [ ! -d "$DESTINATION_PATH" ]; then
-    mkdir $DESTINATION_PATH
+    mkdir -p $DESTINATION_PATH
 fi
 
 # detect Operating System
@@ -227,6 +233,7 @@ then
 rm -drf $TEMP_DIR/opencart
 
 # clone opencart
+
 cd $TEMP_DIR
 git clone  $STABLE
 
@@ -239,7 +246,11 @@ fi
 elif [ $VERSION == 'upstream' ]
 then
 # purge tmp folder
+if [ -d $TEMP_DIR ];
+then
 rm -drf $TEMP_DIR/opencart
+fi 
+
 
 # clone opencart
 cd $TEMP_DIR
@@ -366,11 +377,13 @@ if [ $? -eq 0 ]; then
     echo "Database $DATABASE Created Successfully."
     if [[ "$MYSQL_PASS" == '' ]]; then
 
- php $DESTINATION_PATH/install/cli_install.php install --db_driver $DBDRIVER --db_host $MYSQL_HOST  --db_user $MYSQL_USERNAME --db_password "" --db_name $DATABASE --db_prefix oc_ --username admin --password admin --email admin@example.com --agree_tnc yes --http_server $DOMAIN --domain $PROJECT_NAME 
-
+ #php $DESTINATION_PATH/install/cli_install.php install --db_driver $DBDRIVER --db_hostname $MYSQL_HOST  --db_username $MYSQL_USERNAME --db_password "" --db_database $DATABASE --db_prefix oc_ --username admin --password admin --email admin@example.com --agree_tnc yes --http_server $DOMAIN --domain $PROJECT_NAME 
+ php $DESTINATION_PATH/install/cli_install.php install --db_driver $DBDRIVER --db_hostname $MYSQL_HOST  --db_username $MYSQL_USERNAME --db_password "" --db_database $DATABASE  --username admin --password admin --email admin@example.com --agree_tnc yes --http_server $DOMAIN 
+ 
 else
 
- php $DESTINATION_PATH/install/cli_install.php install --db_driver $DBDRIVER --db_host $MYSQL_HOST  --db_user $MYSQL_USERNAME --db_password $MYSQL_PASS --db_name $DATABASE --db_prefix oc_ --username admin --password admin --email admin@example.com --agree_tnc yes --http_server $DOMAIN --domain $PROJECT_NAME 
+ #php $DESTINATION_PATH/install/cli_install.php install --db_driver $DBDRIVER --db_hostname $MYSQL_HOST  --db_username $MYSQL_USERNAME --db_password $MYSQL_PASS --db_database $DATABASE --db_prefix oc_ --username admin --password admin --email admin@example.com --agree_tnc yes --http_server $DOMAIN --domain $PROJECT_NAME 
+ php $DESTINATION_PATH/install/cli_install.php install --db_driver $DBDRIVER --db_hostname $MYSQL_HOST  --db_username $MYSQL_USERNAME --db_password $MYSQL_PASS --db_database $DATABASE  --username admin --password admin --email admin@example.com --agree_tnc yes --http_server $DOMAIN 
 
 
 fi
