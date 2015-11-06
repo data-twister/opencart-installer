@@ -44,7 +44,7 @@ function help()
 }
 
 
-while getopts ":p:u:d:t:v:m:n:c:h:e:l:o:D:P:N:?" opt; do
+while getopts ":p:u:d:t:v:m:n:c:h:e:l:o:g:w:r:?" opt; do
     case $opt in
         p)
             DESTINATION_PATH=$OPTARG
@@ -69,7 +69,7 @@ while getopts ":p:u:d:t:v:m:n:c:h:e:l:o:D:P:N:?" opt; do
              HOST=$OPTARG
 
             ;;
-        D)
+        g)
              DBDRIVER=$OPTARG
 
             ;;
@@ -91,11 +91,11 @@ while getopts ":p:u:d:t:v:m:n:c:h:e:l:o:D:P:N:?" opt; do
             TRUNCATE=true
             echo "the demo products will be removed"
             ;;
-         P)
+         r)
             MYSQL_PASS=$OPTARG
             ;;
 
-         N)
+         w)
             MYSQL_USERNAME=$OPTARG
             ;;
        

@@ -14,8 +14,8 @@ service mysqld start
 chkconfig httpd on
 chkconfig mysqld on
 mysql -uroot -e "CREATE USER 'opencart-user'@'localhost' IDENTIFIED BY '$PASSWORD'"
-mysql -uroot -e "CREATE database 'opencart'"
-mysql -uroot -e "GRANT ALL PRIVILEGES ON `opencart`.* TO 'opencart-user'@'localhost'"
+mysql -uroot -e "CREATE database opencart"
+mysql -uroot -e "GRANT ALL PRIVILEGES ON opencart.* TO 'opencart-user'@'localhost'"
 mysql -uroot -e "FLUSH PRIVILEGES"
 mkdir Projects
 cd Projects
