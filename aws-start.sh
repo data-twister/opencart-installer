@@ -3,7 +3,8 @@ yum update -y
 yum install -y httpd24 php56 mysql55-server php56-mysqlnd php56-mcrypt php56-gd git
 PASSWORD= $(date | md5sum)
 groupadd www
-usermod -a -G www ec2-user apache 
+usermod -a -G www ec2-user 
+usermod -a -G www  apache 
 chown -R apache:www /var/www
 chgrp -R www /var/www
 chmod 2775 /var/www
@@ -25,3 +26,4 @@ cd opencart-installer
 cd /var/www/html
 HOSTNAME= $(curl http://169.254.169.254/latest/meta-data/hostname)
 install-opencart -n opencart -u ec2-user -d opencart -m $HOSTNAME -h $HOSTNAME  -v stable -w opencart-user -r $PASSWORD -g mysqli
+
