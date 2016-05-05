@@ -27,3 +27,8 @@ cd /var/www/html
 HOSTNAME= $(curl http://169.254.169.254/latest/meta-data/hostname)
 install-opencart -n opencart -u ec2-user -d opencart -m $HOSTNAME -h $HOSTNAME  -v stable -w opencart-user -r $PASSWORD -g mysqli
 
+cd ~
+curl -sS https://getcomposer.org/installer | sudo php
+mv composer.phar /usr/local/bin/composer
+ln -s /usr/local/bin/composer /usr/bin/composer
+composer install
