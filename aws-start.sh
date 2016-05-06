@@ -31,4 +31,7 @@ cd ~
 curl -sS https://getcomposer.org/installer | sudo php
 mv composer.phar /usr/local/bin/composer
 ln -s /usr/local/bin/composer /usr/bin/composer
+
+cd /var/www/html
+
 composer install
