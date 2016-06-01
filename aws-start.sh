@@ -34,4 +34,10 @@ ln -s /usr/local/bin/composer /usr/bin/composer
 
 cd /var/www/html
 
+mv opencart/* .
+
+yum --enablerepo=epel install -y phpmyadmin
+
+ln -s /usr/share/phpmyadmin /var/www/html/phpmyadmin
+
 composer install
