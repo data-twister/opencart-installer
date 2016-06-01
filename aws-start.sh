@@ -1,7 +1,7 @@
 #!/bin/bash
 yum update -y
 yum install -y httpd24 php56 mysql55-server php56-mysqlnd php56-mcrypt php56-gd git
-PASSWORD= $(date | md5sum)
+PASSWORD=$(date | md5sum)
 groupadd www
 usermod -a -G www ec2-user 
 usermod -a -G www  apache 
@@ -24,7 +24,7 @@ git clone https://github.com/mithereal/opencart-installer.git
 cd opencart-installer
 ./install
 cd /var/www/html
-HOSTNAME= $(curl http://169.254.169.254/latest/meta-data/hostname)
+HOSTNAME=$(curl http://169.254.169.254/latest/meta-data/hostname)
 install-opencart -n opencart -u ec2-user -d opencart -m $HOSTNAME -h $HOSTNAME  -v stable -w opencart-user -r $PASSWORD -g mysqli
 
 cd ~
