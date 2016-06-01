@@ -110,6 +110,8 @@ while getopts ":p:u:d:t:v:m:n:c:h:e:l:o:g:w:r:?" opt; do
     esac
 done
 
+DBDRIVER="mysqli"
+
 if [ -z "$VERSION" ]
 then
             help
@@ -133,10 +135,10 @@ if [ -z "$HOST" ]
 then
       read -p "Enter the hostname of the database: " MYSQL_HOST
 fi
-if [ -z "$DBDRIVER" ]
-then
-      read -p "Enter the  database driver: " DBDRIVER
-fi
+#if [ -z "$DBDRIVER" ]
+#then
+ #     read -p "Enter the  database driver: " DBDRIVER
+#fi
 
 if [ -z "$MYSQL_USERNAME" ]
 then
