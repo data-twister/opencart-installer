@@ -7,8 +7,6 @@ cp -r home/user/* ~/.
 
 chmod +x /usr/local/bin/install-opencart
 chmod +x /usr/local/bin/install-opencart-plugin
-chmod +x /usr/bin/install-opencart
-chmod +x /usr/bin/install-opencart-plugin
 
 echo "Install Complete"
 exit 0

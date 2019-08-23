@@ -110,6 +110,7 @@ while getopts ":p:u:d:t:v:m:n:c:h:e:l:o:g:w:r:?" opt; do
     esac
 done
 
+
 if [ -z "$VERSION" ]
 then
             help
@@ -133,9 +134,10 @@ if [ -z "$HOST" ]
 then
       read -p "Enter the hostname of the database: " MYSQL_HOST
 fi
+
 if [ -z "$DBDRIVER" ]
 then
-      read -p "Enter the  database driver: " DBDRIVER
+     read -p "Enter the  database driver: " DBDRIVER
 fi
 
 if [ -z "$MYSQL_USERNAME" ]
@@ -372,18 +374,19 @@ else
     echo "create database IF NOT EXISTS $DATABASE" | mysql -u $MYSQL_USERNAME -p$MYSQL_PASS
 fi
 
-# todo fix error being generated from /install/cli_install.php
+
 if [ $? -eq 0 ]; then
     echo "Database $DATABASE Created Successfully."
     if [[ "$MYSQL_PASS" == '' ]]; then
 
+
  #php $DESTINATION_PATH/install/cli_install.php install --db_driver $DBDRIVER --db_hostname $MYSQL_HOST  --db_username $MYSQL_USERNAME --db_password "" --db_database $DATABASE --db_prefix oc_ --username admin --password admin --email admin@example.com --agree_tnc yes --http_server $DOMAIN --domain $PROJECT_NAME 
- php $DESTINATION_PATH/install/cli_install.php install --db_driver $DBDRIVER --db_hostname $MYSQL_HOST  --db_username $MYSQL_USERNAME --db_password "" --db_database $DATABASE  --username admin --password admin --email admin@example.com --agree_tnc yes --http_server $DOMAIN 
+ php $DESTINATION_PATH/install/cli_install.php install --db_driver $DBDRIVER --db_hostname $MYSQL_HOST  --db_username $MYSQL_USERNAME --db_password "" --db_database $DATABASE  --username admin --password admin --email admin@example.com  yes --http_server $DOMAIN 
  
 else
 
  #php $DESTINATION_PATH/install/cli_install.php install --db_driver $DBDRIVER --db_hostname $MYSQL_HOST  --db_username $MYSQL_USERNAME --db_password $MYSQL_PASS --db_database $DATABASE --db_prefix oc_ --username admin --password admin --email admin@example.com --agree_tnc yes --http_server $DOMAIN --domain $PROJECT_NAME 
- php $DESTINATION_PATH/install/cli_install.php install --db_driver $DBDRIVER --db_hostname $MYSQL_HOST  --db_username $MYSQL_USERNAME --db_password $MYSQL_PASS --db_database $DATABASE  --username admin --password admin --email admin@example.com --agree_tnc yes --http_server $DOMAIN 
+ php $DESTINATION_PATH/install/cli_install.php install --db_driver $DBDRIVER --db_hostname $MYSQL_HOST  --db_username $MYSQL_USERNAME --db_password $MYSQL_PASS --db_database $DATABASE  --username admin --password admin --email admin@example.com  yes --http_server $DOMAIN 
 
 
 fi
