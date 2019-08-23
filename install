@@ -3,8 +3,6 @@
 sudo cp -r usr/* /usr
 sudo cp -r etc/* /etc
 
-sudo cp -r upload /tmp/.
-
 cp -r home/user/* ~/.
 
 sudo chmod +x /usr/local/bin/install-opencart
@@ -12,3 +10,8 @@ sudo chmod +x /usr/local/bin/install-opencart-plugin
 
 echo "Install Complete"
 exit 0
+
+php cli_install.php install --db_driver mysqli --db_hostname   --db_username opencart --db_password opencart --db_database opencart  --username admin --password admin --email admin@example.com  yes --http_server 127.0.0.1 
+
+
+php cli_install.php install --db_hostname localhost --db_username root --db_password pass --db_database opencart --db_driver mysqli --db_port 3306 --http_server http://localhost/opencart/ --username admin --password admin --email youremail@example.com

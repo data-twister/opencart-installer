@@ -132,7 +132,7 @@ echo "Preparing to install Opencart..."
 echo ""
 if [ -z "$HOST" ]
 then
-      read -p "Enter the hostname of the database: " MYSQL_HOST
+      read -p "Enter the hostname of the database: " HOST
 fi
 
 if [ -z "$DBDRIVER" ]
@@ -314,7 +314,7 @@ if [[ -z "$VERBOSE" ]]; then
 
     # change permissions
     chown -R $FOR_USER:$FOR_USER $DESTINATION_PATH > /dev/null 2>&1
-    chmod -R 755 $DESTINATION_PATH > /dev/null 2>&1
+    chmod -R 777 $DESTINATION_PATH > /dev/null 2>&1
 
     chmod 0777 $DESTINATION_PATH/config.php > /dev/null 2>&1
     chmod 0777 $DESTINATION_PATH/admin/config.php > /dev/null 2>&1
@@ -329,7 +329,7 @@ if [[ -z "$VERBOSE" ]]; then
 else
     # change permissions
     chown -R $FOR_USER:$FOR_USER $DESTINATION_PATH 
-    chmod -R 755 $DESTINATION_PATH 
+    chmod -R 777 $DESTINATION_PATH 
 
     chmod 0777 $DESTINATION_PATH/config.php 
     chmod 0777 $DESTINATION_PATH/admin/config.php 
@@ -380,25 +380,19 @@ if [ $? -eq 0 ]; then
     if [[ "$MYSQL_PASS" == '' ]]; then
 
 
- #php $DESTINATION_PATH/install/cli_install.php install --db_driver $DBDRIVER --db_hostname $MYSQL_HOST  --db_username $MYSQL_USERNAME --db_password "" --db_database $DATABASE --db_prefix oc_ --username admin --password admin --email admin@example.com --agree_tnc yes --http_server $DOMAIN --domain $PROJECT_NAME 
- php $DESTINATION_PATH/install/cli_install.php install --db_driver $DBDRIVER --db_hostname $MYSQL_HOST  --db_username $MYSQL_USERNAME --db_password "" --db_database $DATABASE  --username admin --password admin --email admin@example.com  yes --http_server $DOMAIN 
+ php $DESTINATION_PATH/install/cli_install.php install --db_driver $DBDRIVER --db_hostname $HOST  --db_username $MYSQL_USERNAME --db_password "" --db_database $DATABASE  --username admin --password admin --email admin@example.com  yes --http_server $DOMAIN 
  
 else
 
- #php $DESTINATION_PATH/install/cli_install.php install --db_driver $DBDRIVER --db_hostname $MYSQL_HOST  --db_username $MYSQL_USERNAME --db_password $MYSQL_PASS --db_database $DATABASE --db_prefix oc_ --username admin --password admin --email admin@example.com --agree_tnc yes --http_server $DOMAIN --domain $PROJECT_NAME 
- php $DESTINATION_PATH/install/cli_install.php install --db_driver $DBDRIVER --db_hostname $MYSQL_HOST  --db_username $MYSQL_USERNAME --db_password $MYSQL_PASS --db_database $DATABASE  --username admin --password admin --email admin@example.com  yes --http_server $DOMAIN 
+echo "$DESTINATION_PATH/install/cli_install.php install --db_driver $DBDRIVER --db_hostname $HOST  --db_username $MYSQL_USERNAME --db_password $MYSQL_PASS --db_database $DATABASE  --username admin --password admin --email admin@example.com  --http_server $DOMAIN 
+
+"
+
+ php $DESTINATION_PATH/install/cli_install.php install --db_driver $DBDRIVER --db_hostname $HOST  --db_username $MYSQL_USERNAME --db_password $MYSQL_PASS --db_database $DATABASE  --username admin --password admin --email admin@example.com  --http_server $DOMAIN 
 
 
 fi
 
-if $TRUNCATE; then
-    echo "Truncating opencart $VERSION database..."
-    if [[ "$MYSQL_PASS" == '' ]]; then
-        cat $TRUNCATE_FILE | mysql -u $MYSQL_USERNAME $DATABASE
-    else
-        cat $TRUNCATE_FILE | mysql -u $MYSQL_USERNAME -p$MYSQL_PASS $DATABASE
-    fi
-fi
 
 if [ $? -eq 0 ]; then
 # remove install folder
