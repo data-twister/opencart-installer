@@ -76,7 +76,7 @@ Usage
 1. navigate to the folder you wish to install opencart
 2. run:  
 
-	        opencart-install -n <project_name> -u <user_name> -d <database_name> -m <domain_url> -h <host_url> -t <theme1,theme2,theme3> -e <extension1,extension2,extension3> -v <version> -o <overwrite database>
+	        install-opencart -v stable -n <project_name> -u <user_name> -d <database_name> -m <domain_url> -h <host_url> -t <theme1,theme2,theme3> -e <extension1,extension2,extension3> -v <version> -o <overwrite database>
 	  
 versions: stable = fetch the latest stable branch via wget | origin = clone the latest from your git repo | upstream = clone the main opencart git repo 
 
@@ -86,11 +86,11 @@ you can change the location of opencart base in /etc/opencart-install.conf
 		  
 extensions and modules: these files follow a common naming convention see source for more info
 
-3. Base opencart should be installed and accessible through __&lt;domain\_url&gt;__ & __&lt;domain\_url&gt;/admin__ with admin:admin123
-4. Database &lt;user\_name&gt;\_&lt;database\_name&gt; should have been created in mysql server specified inside install_opencart.sh
+1. Base opencart should be installed and accessible through __&lt;domain\_url&gt;__ & __&lt;domain\_url&gt;/admin__ with admin:admin123
+2. Database &lt;user\_name&gt;\_&lt;database\_name&gt; should have been created in mysql server specified inside install_opencart.sh
 
 
-5. Sync Online-Production (git & git-ftp)
+3. Sync Online-Production (git & git-ftp)
 -----
 
  Connect to production with ssh
